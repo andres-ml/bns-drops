@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>BNS Drops</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <link href="css/style.css" rel="stylesheet" type="text/css">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" type="text/css">
+    </head>
+    <body>
+        
+<!--        <div class="header">
+            <h1>BNS Drop Manager</h1>
+        </div>-->
+                
+        
+        <section id="drops">
+            <h4>Drops list:</h4>
+            <div class="drops">
+                
+            </div>
+        </section>
+        
+                
+        <section id="totals">
+            <h4>Totals:</h4>
+            <button class="btn btn-danger btn-reset" >RESET</button>
+            <div class="totals flex">
+                <div class="party" data-size="1" style="flex: 1">
+                    <h4>All</h4>
+                    <div class="text"></div>
+                </div>
+                <div class="party" data-size="4" style="flex: 1">
+                    <h4>4man</h4>
+                    <div class="text"></div>
+                </div>
+                <div class="party" data-size="6" style="flex: 1">
+                    <h4>
+                        Other <input id="party-size" type="number" value="6">
+                    </h4>
+                    <div class="text"></div>
+                </div>
+            </div>
+        </section>
+                
+                
+        <section id="comments">
+            <h4>Notes:</h4>
+            <textarea class="comments" style="width:100%; min-height: 100px;" placeholder="changes you write here will be saved.."></textarea>
+        </section>
+        
+        
+        <!--templates-->
+        <template id="drop-template">
+            <div class="drop flex" >
+                <span class="drop-info" style="flex:1">
+                    <img class="icon" src="" alt="">
+                    <span class="name"></span>
+                </span>
+                <span class="drop-adders flex" style="flex: 3">
+
+                </span>
+            </div>
+        </template>
+        
+        <template id="drop-add-template">
+            <button class="btn btn-drop-add"></button>
+        </template>
+        
+        <template id="total-template">
+            <div class="total flex">
+                <span style="flex:1">
+                    <img src="" class="icon" style="width: 25px; height: 25px" alt="icon">
+                </span>
+                <span class="count number" style="flex:1"></span>
+                <span class="surplus number" style="flex:1"></span>
+                <span class="name" style="flex:8"></span>
+            </div>
+        </template>
+        
+        
+        
+        
+        
+        
+        
+        <!--scripts-->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+        
+        <script src="js/utils.js"></script>
+        
+        
+        <script>
+            
+            (function() {
+                
+                var drops = {
+                    stinger: {
+                        name: "stingers",
+                        stacks: [1, 2, 5, 10, -1, -2, -5],
+                        image: "http://bnsdb.net/img/Items/Frozen_Venom_Dart.png",
+                    },
+                    ornament: {
+                        name: "ornaments",
+                        stacks: [1, 10, -1],
+                        image: "http://bnsdb.net/img/Items/Honorary_Ornament.png",
+                    },
+                    soulstone: {
+                        name: "soulstones",
+                        stacks: [10, 100, -10, -100],
+                        image: "http://bnsdb.net/img/Items/Soulstone.png",
+                    },
+                    moonstone: {
+                        name: "moonstones",
+                        stacks: [1, 10, -1],
+                        image: "http://bnsdb.net/img/Items/Moonstone.png",
+                    },
+                };
+                
+                var state = {
+                    totals:     {},
+                    customSize: 6,
+                    comments:   ''
+                };
+                
+                
+                function buildDrops() {
+                    $('#drops .drops').empty();
+                    for (var key in drops) {
+                        buildDrop(key);
+                    }
+                }
+                
+                function buildDrop(key) {
+                    var drop    = drops[key];
+                    var $drop   = $( $('#drop-template').html() );
+                    
+                    $drop.find('.name').text(drop.name);
+                    $drop.find('.price').text(drop.price);
+                    $drop.find('.icon').attr('src', drop.image);
+                    
+                    var $adders = $drop.find('.drop-adders');
+                    for (var i = 0; i < drop.stacks.length; ++i) {
+                        var n = drop.stacks[i];
+                        var $button = $( $('#drop-add-template').html() );
+                        $button.text( (n > 0 ? '+' : '-') + Math.abs(n));
+                        $button.addClass(n >= 0 ? 'add' : 'remove');
+                        $button.appendTo($adders);
+                    }
+                    
+                    $drop.data('key', key);
+                    $drop.appendTo('.drops');
+                }
+                
+                toastr.options = {
+                    "newestOnTop": false,
+                    "positionClass": "toast-bottom-right",
+                    "timeOut": "5000",
+                };
+                
+                $(function() {
+                    buildDrops();
+                    var saved_state = localStorage.getItem('state');
+                    if (saved_state !== null) {
+                        state = JSON.parse(saved_state);
+                        $('.comments').val(state.comments);
+                        displayTotals();
+                    }
+                    
+                    $('.comments').focus();
+                });
+                
+                for (var key in drops) {
+                    state.totals[key] = 0;
+                }
+                
+                function add(key, n) {
+                    if (n === 0) return;
+                    
+                    state.totals[key] += n;
+                    if (state.totals[key] < 0) {
+                        state.totals[key] = 0;
+                    }
+                    displayTotals();
+                    persist();
+                    
+                    var message = (n > 0 ? "Added " : "Removed ") + Math.abs(n) + " " + drops[key].name;
+                    var $toast = toastr[n > 0 ? "success" : "error"](message);
+                    $toast.attr('style', $toast.attr('style') + '; ' + 'background-image: url(' + drops[key].image + ') !important');
+                    
+                    console.log(message);
+                }
+                
+                function displayTotals() {
+                    $('.totals div').each(function() {
+                        var size    = $(this).data('size');
+                        
+                        var items   = [];
+                        for (var key in state.totals) {
+                            var total       = state.totals[key];
+                            if (total === 0) {
+                                continue;
+                            }
+                            
+                            items.push( renderTotal(key, total, size) );
+                        }
+                        
+                        $(this).find('.text').html( items.join('<hr>') );
+                    });
+                }
+                
+                
+                function renderTotal(key, total, size) {
+                    var $total      = $( $('#total-template').html() );
+                    $total.find('.name').text(drops[key].name);
+                    $total.find('.icon').attr('src', drops[key].image);
+                    
+                    var per_capita  = Math.floor( total / size );
+                    $total.find('.count').text(per_capita);
+                    
+                    if (total % size !== 0) {
+                        $total.find('.surplus').text(total % size);
+                    }
+                    
+                    return $total.outerHtml();
+                }
+                
+                $('.drops').on('click', '.btn-drop-add', function() {
+                    var n   = parseInt( $(this).text() );
+                    var key = $(this).closest('.drop').data('key');
+                    add(key, n);
+                });
+                
+                
+                $('.btn-reset').on('click', function() {
+                    reset();
+                });
+                
+                $('.comments').on('input', function() {
+                    state.comments = $(this).val();
+                    persist();
+                });
+                
+                $('#party-size').on('input', function() {
+                    var size = $(this).val();
+                    $(this).closest('.party').data('size', size);
+                    displayTotals();
+                });
+                
+                function reset() {
+                    for (var key in state.totals) {
+                        add(key, -state.totals[key]);
+                    }
+                    persist();
+                    
+                    console.log('reset');
+                }
+                
+                function persist() {
+                    localStorage.setItem('state', JSON.stringify(state));
+                }
+                
+            })();
+            
+        </script>
+    
+    </body>
+    
+    
+</html>

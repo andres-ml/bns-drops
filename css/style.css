@@ -1,0 +1,191 @@
+body {
+    background: #3a4258;
+    font-family: Rockwell Extra Bold,Rockwell Bold,monospace; 
+    color: white;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+body > .header {
+    background: #414961;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center; 
+}
+
+body > .header > img {
+    display: inline;
+    max-height: 100%;
+}
+
+body > .header > h1 {
+    display: inline-block;
+    margin: auto 10px auto 10px;
+}
+
+body > section:after {
+    content: "";
+    display: block;
+    height: 1px;
+    width: 100%;
+    margin: 10px auto 10px auto;
+    background: #31364a;
+}
+
+section {
+    padding: 10px 10px 0 10px;
+}
+
+h1 {
+    font-size:xx-large;
+    margin: 0px;
+    font-weight: 200;
+}
+
+
+textarea, button {
+    border: none;
+    overflow: auto;
+    outline: none;
+
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+}
+
+.flex {
+    display: flex;
+}
+
+.flex > * {
+    margin-right: 10px;
+}
+
+.col4 {
+    width: 500px;
+    flex: 4
+}
+
+.col6 {
+    flex: 6
+}
+
+input[type=text] {
+    background-color: #24293a;
+    color: white;
+    border: 0px;
+    padding: 5px;
+}
+
+input.numeric {
+    text-align: right;
+}
+
+::-webkit-input-placeholder {
+    color: #999999;
+}
+::-moz-placeholder {  /* Firefox 19+ */
+   color: #999999;  
+}
+
+.drop {
+    margin-top: 15px;
+}
+
+.drop-info {
+    display: inline-block;
+    padding: 0px;
+    background-color: #24293a;
+    border-radius: 2px;
+}
+
+.drop-info .icon {
+    display: inline;
+    background-color: #3c2f4e;
+    padding: 2px;
+    border-radius: 2px;
+    vertical-align: middle;
+    height: 50px;
+}
+
+.btn {
+    background-color: #24293a;
+    border-radius: 2px;
+    color: white;
+    cursor: pointer;
+    border: 0px;
+}
+
+.btn-drop-add {
+    width: 60px;
+    height: auto;
+}
+
+.btn:hover, .btn.active {
+    background-color: #0d1b2b;
+}
+
+.btn.add {
+    color:#ccf397;
+}
+
+.btn.remove {
+    color: #e86363;
+}
+
+
+.hidden {
+    display: none;
+}
+
+textarea {
+    background-color: #24293a;
+    color: white;
+}
+
+
+.btn-danger {
+    background-color: #b75353;
+    padding: 5px;
+}
+
+.total .surplus {
+    opacity: 0.5;
+}
+
+.total .number {
+    font-size: 18px;
+}
+
+.total .count {
+    color: yellow;
+}
+
+.pull-right {
+    float: right;
+    height: 100%;
+}
+
+.about img {
+    max-width:90%;
+    max-height:80%;
+    margin-top: 10px;
+    opacity: 0.5;
+    float:right;
+}
+
+.about {
+    width: 70%;
+}
+
+.header h1 {
+    color: #1d2935;
+}
+
+.toast {
+    width: auto !important;
+    background-position: 5px center !important;
+    background-size: 40px 40px !important;
+    opacity: 0.9 !important;
+}
