@@ -178,7 +178,7 @@ and open the template in the editor.
                     buildDrops();
                     var saved_state = localStorage.getItem('state');
                     if (saved_state !== null) {
-                        state = JSON.parse(saved_state);
+                        $.extend(true, state, JSON.parse(saved_state));
                         $('.comments').val(state.comments);
                         displayTotals();
                         state.logs.forEach(function(message) {
