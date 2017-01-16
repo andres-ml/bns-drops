@@ -122,6 +122,10 @@ input.numeric {
     height: auto;
 }
 
+.btn-drop-add:not(:active) {
+    border-bottom: 2px solid #161827;
+}
+
 .btn:hover, .btn.active {
     background-color: #0d1b2b;
 }
