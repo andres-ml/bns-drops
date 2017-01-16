@@ -8,3 +8,14 @@
 $.fn.outerHtml = function() {
     return $('<div>').append($(this).clone()).html();
 };
+
+$.fn.toggleEased = function(speed) {
+    var visible = $(this).is(':visible');
+    
+    if (!visible) {
+        $(this).slideDown(speed);
+    }
+    else {
+        $(this).slideUp(speed);
+    }
+};

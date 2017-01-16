@@ -138,6 +138,12 @@ input.numeric {
     color: #e86363;
 }
 
+.log-message {
+    display: block;
+    font-size: small;
+    opacity: 0.8;
+    margin-bottom: 5px;
+}
 
 .hidden {
     display: none;
@@ -151,6 +157,11 @@ textarea {
 
 .btn-danger {
     background-color: #b75353;
+    padding: 5px;
+}
+
+.btn-info {
+    background-color: #bfb418;
     padding: 5px;
 }
 

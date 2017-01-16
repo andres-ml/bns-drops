@@ -31,7 +31,7 @@ and open the template in the editor.
                 
         <section id="totals">
             <h4>Totals:</h4>
-            <button class="btn btn-danger btn-reset" >RESET</button>
+            <button class="btn btn-danger btn-reset" >RESET</button> <button class="btn btn-info btn-log">LOG</button>
             <div class="totals flex">
                 <div class="party" data-size="1" style="flex: 1">
                     <h4>All</h4>
@@ -54,6 +54,14 @@ and open the template in the editor.
         <section id="comments">
             <h4>Notes:</h4>
             <textarea class="comments" style="width:100%; min-height: 100px;" placeholder="changes you write here will be saved.."></textarea>
+        </section>
+                
+                
+        <section id="log" style="display:none">
+            <h4>Log</h4>
+            <span class="log">
+                
+            </span>
         </section>
         
         
@@ -85,6 +93,10 @@ and open the template in the editor.
             </div>
         </template>
         
+        <template id="log-template">
+            <span class="log-message"></span>
+        </template>
+        
         
         
         
@@ -110,25 +122,21 @@ and open the template in the editor.
                     },
                     ornament: {
                         name: "ornaments",
-                        stacks: [1, 10, -1],
+                        stacks: [1, 2, 3, -1],
                         image: "http://bnsdb.net/img/Items/Honorary_Ornament.png",
                     },
-                    soulstone: {
-                        name: "soulstones",
-                        stacks: [10, 100, -10, -100],
-                        image: "http://bnsdb.net/img/Items/Soulstone.png",
-                    },
-                    moonstone: {
-                        name: "moonstones",
-                        stacks: [1, 10, -1],
-                        image: "http://bnsdb.net/img/Items/Moonstone.png",
+                    radiant: {
+                        name: "radiant energies",
+                        stacks: [1, -1],
+                        image: "http://bnsdb.net/img/Items/Radiant_Energy.png",
                     },
                 };
                 
                 var state = {
                     totals:     {},
                     customSize: 6,
-                    comments:   ''
+                    comments:   '',
+                    logs:       [],
                 };
                 
                 
@@ -173,6 +181,9 @@ and open the template in the editor.
                         state = JSON.parse(saved_state);
                         $('.comments').val(state.comments);
                         displayTotals();
+                        state.logs.forEach(function(message) {
+                            renderLog(message);
+                        });
                     }
                     
                     $('.comments').focus();
@@ -196,7 +207,7 @@ and open the template in the editor.
                     var $toast = toastr[n > 0 ? "success" : "error"](message);
                     $toast.attr('style', $toast.attr('style') + '; ' + 'background-image: url(' + drops[key].image + ') !important');
                     
-                    console.log(message);
+                    log(message);
                 }
                 
                 function displayTotals() {
@@ -244,6 +255,10 @@ and open the template in the editor.
                     reset();
                 });
                 
+                $('.btn-log').on('click', function() {
+                    $('#log').toggleEased(500);
+                });
+                
                 $('.comments').on('input', function() {
                     state.comments = $(this).val();
                     persist();
@@ -256,16 +271,36 @@ and open the template in the editor.
                 });
                 
                 function reset() {
+                    log('<b>-- begin reset --</b>');
+                    
                     for (var key in state.totals) {
                         add(key, -state.totals[key]);
                     }
-                    persist();
                     
-                    console.log('reset');
+                    log('<b>--- end reset ---</b>');
+                    
+                    persist();
                 }
                 
                 function persist() {
                     localStorage.setItem('state', JSON.stringify(state));
+                }
+                
+                function log(message) {
+                    message = '[' + (new Date()).toLocaleTimeString() + '] <i>' + message + '</i>';
+                    
+                    state.logs.push(message);
+                    
+                    renderLog(message);
+                    
+                    console.log(message);
+                }
+                
+                function renderLog(message) {
+                    var $log = $( $('#log-template').html() );
+                    $log.html(message);
+                    
+                    $log.prependTo('.log');
                 }
                 
             })();
