@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
+Laravel @ Sanguine Guard, Angler's Watch
 -->
 <html>
     <head>
@@ -16,9 +14,9 @@ and open the template in the editor.
     </head>
     <body>
         
-<!--        <div class="header">
-            <h1>BNS Drop Manager</h1>
-        </div>-->
+        <div class="header">
+            <span class="title">BNS Drops</span>
+        </div>
                 
         
         <section id="drops">
@@ -30,8 +28,6 @@ and open the template in the editor.
         
                 
         <section id="totals">
-            <h4>Totals:</h4>
-            <button class="btn btn-danger btn-reset" >RESET</button> <button class="btn btn-info btn-log">LOG</button>
             <div class="totals flex">
                 <div class="party" data-size="1" style="flex: 1">
                     <h4>All</h4>
@@ -47,6 +43,11 @@ and open the template in the editor.
                     </h4>
                     <div class="text"></div>
                 </div>
+            </div>
+            <div class="buttons">
+                <button class="btn btn-danger btn-reset" >RESET</button>
+                <button class="btn btn-log">LOG</button>
+                <input type="text" placeholder="Session name" style="width:400px"><button class="btn btn-save">SAVE</button> 
             </div>
         </section>
                 
@@ -137,6 +138,7 @@ and open the template in the editor.
                     customSize: 6,
                     comments:   '',
                     logs:       [],
+                    sessions:   [],
                 };
                 
                 
