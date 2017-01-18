@@ -169,15 +169,17 @@ Laravel @ Sanguine Guard, Angler's Watch
                     var $session_name   = $('#session-name');
                     var session_name    = $session_name.val();
                     
+                    var date = new Date();
+                    
                     if (!session_name) {
-                        session_name = 'AUTO';
+                        session_name = 'Autosave ' + date.toLocaleTimeString();
                     }
                     
                     $session_name.val('');
                     
                     var session = {
                         name:   session_name,
-                        date:   new Date(),
+                        date:   date,
                         totals: $.extend({}, state.totals)
                     };
                     
