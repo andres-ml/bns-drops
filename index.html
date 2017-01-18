@@ -159,8 +159,10 @@ Laravel @ Sanguine Guard, Angler's Watch
                 });
                 
                 function saveSession() {
-                    addSession();
+                    var session = addSession();
                     resetTotals();
+                    
+                    log('saved session ' + session.name);
                 }
                 
                 function addSession() {
@@ -173,15 +175,19 @@ Laravel @ Sanguine Guard, Angler's Watch
                     
                     $session_name.val('');
                     
-                    state.sessions.push({
+                    var session = {
                         name:   session_name,
                         date:   new Date(),
                         totals: $.extend({}, state.totals)
-                    });
+                    };
+                    
+                    state.sessions.push(session);
                     
                     renderSession(state.sessions.length - 1);
                     
                     persist();
+                    
+                    return session;
                 }
                 
                 function renderSession(index) {
@@ -217,6 +223,8 @@ Laravel @ Sanguine Guard, Angler's Watch
                     $('#session-name').val(session.name);
                     
                     deleteSession(index);
+                    
+                    log('restored session ' + session.name);
                 }
                 
                 function deleteSession(index) {

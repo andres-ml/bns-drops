@@ -148,7 +148,8 @@ input.numeric {
     padding: 5px;
     min-width: 100px;
     margin-bottom: 10px;
-    background-color: #5a6178;
+    color: #aeb2b7;
+    font-size: 14px;
 }
 
 .log-message {
