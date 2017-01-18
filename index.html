@@ -12,7 +12,7 @@ Laravel @ Sanguine Guard, Angler's Watch
         <link href="css/style.css?v=1.0" rel="stylesheet" type="text/css">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" type="text/css">
     </head>
-    <body>
+    <body spellcheck="false">
         
         <div class="header">
             <span class="title">BNS Drops</span>
@@ -60,9 +60,9 @@ Laravel @ Sanguine Guard, Angler's Watch
                 
         <section id="log" style="display:none">
             <h4>Log</h4>
-            <span class="log">
+            <div class="log">
                 
-            </span>
+            </div>
         </section>
         
         
@@ -289,7 +289,7 @@ Laravel @ Sanguine Guard, Angler's Watch
                 }
                 
                 function log(message) {
-                    message = '[' + (new Date()).toLocaleTimeString() + '] <i>' + message + '</i>';
+                    message = '[' + (new Date()).toLocaleTimeString() + '] ' + message;
                     
                     state.logs.push(message);
                     

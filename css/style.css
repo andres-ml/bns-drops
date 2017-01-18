@@ -40,8 +40,7 @@ section {
 .title {
     font-size:small;
     margin: 0px;
-    color:#bcc3d1e1;
-    font-weight: 600;
+    color:#bcc3d1;
 }
 
 
@@ -139,6 +138,12 @@ input.numeric {
     color: #e86363;
 }
 
+.log {
+    background-color: #24293a;
+    max-height: 400px;
+    overflow-y: scroll;
+}
+
 .log-message {
     display: block;
     font-size: small;
@@ -155,6 +160,9 @@ textarea {
     color: white;
 }
 
+textarea, input, .log {
+    padding: 5px;
+}
 
 .btn-reset {
     background-color: #b75353;
