@@ -144,6 +144,13 @@ input.numeric {
     overflow-y: scroll;
 }
 
+.session .btn {
+    padding: 5px;
+    min-width: 100px;
+    margin-bottom: 10px;
+    background-color: #5a6178;
+}
+
 .log-message {
     display: block;
     font-size: small;

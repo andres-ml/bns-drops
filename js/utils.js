@@ -19,3 +19,10 @@ $.fn.toggleEased = function(speed) {
         $(this).slideUp(speed);
     }
 };
+
+$(document.body).on('keyup', 'input', function(event) {
+    var target = $(this).data('bind-enter');
+    if (target && event.keyCode === 13) {
+        $('#' + target).click();
+    }
+});

@@ -47,10 +47,16 @@ Laravel @ Sanguine Guard, Angler's Watch
             <div class="buttons">
                 <button class="btn btn-danger btn-reset" >RESET</button>
                 <button class="btn btn-log">LOG</button>
-                <input type="text" placeholder="Session name" style="width:400px"><button class="btn btn-save">SAVE</button> 
+                <input type="text" placeholder="Session name" id="session-name" data-bind-enter="save-session" style="width:400px"><button id="save-session" class="btn btn-save">SAVE</button> 
             </div>
         </section>
                 
+                
+        <section id="sessions">
+            <h4>Sessions</h4>
+            <div class="sessions">
+            </div>
+        </section>
                 
         <section id="comments">
             <h4>Notes:</h4>
@@ -99,6 +105,13 @@ Laravel @ Sanguine Guard, Angler's Watch
         </template>
         
         
+        <template id="session-template">
+            <span class="session">
+                <button class="btn name"></button>
+            </span>
+        </template>
+        
+        
         
         
         
@@ -141,6 +154,77 @@ Laravel @ Sanguine Guard, Angler's Watch
                     sessions:   [],
                 };
                 
+                $('.btn-save').on('click', function() {
+                    saveSession();
+                });
+                
+                function saveSession() {
+                    addSession();
+                    resetTotals();
+                }
+                
+                function addSession() {
+                    var $session_name   = $('#session-name');
+                    var session_name    = $session_name.val();
+                    
+                    if (!session_name) {
+                        session_name = 'AUTO';
+                    }
+                    
+                    $session_name.val('');
+                    
+                    state.sessions.push({
+                        name:   session_name,
+                        date:   new Date(),
+                        totals: $.extend({}, state.totals)
+                    });
+                    
+                    renderSession(state.sessions.length - 1);
+                    
+                    persist();
+                }
+                
+                function renderSession(index) {
+                    var session = state.sessions[index];
+                    var $session = $( $('#session-template').html() );
+                    
+                    $session.find('.name').text(session.name);
+                    
+                    $('.sessions').append($session);
+                    $('.sessions').slideDown(200);
+                }
+                
+                $('.sessions').on('click', '.session', function() {
+                    var index = $('.sessions .session').index(this);
+                    restoreSession(index);
+                    $(this).remove();
+                });
+                
+                function restoreSession(index) {
+                    
+                    // auto backup current session if not empty
+                    for (var item in state.totals) {
+                        if (state.totals[item] > 0) {
+                            addSession();
+                            break;
+                        }
+                    }
+                    
+                    var session = state.sessions[index];
+                    state.totals = session.totals;
+                    renderTotals();
+                    
+                    $('#session-name').val(session.name);
+                    
+                    deleteSession(index);
+                }
+                
+                function deleteSession(index) {
+                    state.sessions.splice(index, 1);
+                    if (state.sessions.length === 0) {
+                        $('.sessions').slideUp(200);
+                    }
+                }
                 
                 function buildDrops() {
                     $('#drops .drops').empty();
@@ -180,12 +264,25 @@ Laravel @ Sanguine Guard, Angler's Watch
                     buildDrops();
                     var saved_state = localStorage.getItem('state');
                     if (saved_state !== null) {
+                        
+                        // load
                         $.extend(true, state, JSON.parse(saved_state));
+                        
+                        // restore comments
                         $('.comments').val(state.comments);
-                        displayTotals();
+                        
+                        // restore totals
+                        renderTotals();
+                        
+                        // restore logs
                         state.logs.forEach(function(message) {
                             renderLog(message);
                         });
+                        
+                        // draw sessions
+                        for (var i = 0; i < state.sessions.length; ++i) {
+                            renderSession(i);
+                        }
                     }
                     
                     $('.comments').focus();
@@ -202,7 +299,7 @@ Laravel @ Sanguine Guard, Angler's Watch
                     if (state.totals[key] < 0) {
                         state.totals[key] = 0;
                     }
-                    displayTotals();
+                    renderTotals();
                     persist();
                     
                     var message = (n > 0 ? "Added " : "Removed ") + Math.abs(n) + " " + drops[key].name;
@@ -212,7 +309,7 @@ Laravel @ Sanguine Guard, Angler's Watch
                     log(message);
                 }
                 
-                function displayTotals() {
+                function renderTotals() {
                     $('.totals div').each(function() {
                         var size    = $(this).data('size');
                         
@@ -269,7 +366,7 @@ Laravel @ Sanguine Guard, Angler's Watch
                 $('#party-size').on('input', function() {
                     var size = $(this).val();
                     $(this).closest('.party').data('size', size);
-                    displayTotals();
+                    renderTotals();
                 });
                 
                 function reset() {
@@ -281,10 +378,20 @@ Laravel @ Sanguine Guard, Angler's Watch
                     
                     log('<b>--- end reset ---</b>');
                     
+                    $('#session-name').val('');
+                    
                     persist();
                 }
                 
+                function resetTotals() {
+                    for (var key in state.totals) {
+                        state.totals[key] = 0;;
+                    }
+                    renderTotals();
+                }
+                
                 function persist() {
+                    console.log(state.sessions);
                     localStorage.setItem('state', JSON.stringify(state));
                 }
                 
