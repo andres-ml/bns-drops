@@ -305,18 +305,22 @@ Laravel @ Sanguine Guard, Angler's Watch
                 function add(key, n) {
                     if (n === 0) return;
                     
-                    state.totals[key] += n;
-                    if (state.totals[key] < 0) {
-                        state.totals[key] = 0;
+                    // prevent substracting more than there is
+                    if (state.totals[key] + n < 0) {
+                        n = -state.totals[key];
                     }
+                    
+                    state.totals[key] += n;
+
                     renderTotals();
-                    persist();
                     
                     var message = (n > 0 ? "Added " : "Removed ") + Math.abs(n) + " " + drops[key].name;
                     var $toast = toastr[n > 0 ? "success" : "error"](message);
                     $toast.attr('style', $toast.attr('style') + '; ' + 'background-image: url(' + drops[key].image + ') !important');
                     
                     log(message);
+                    
+                    persist();
                 }
                 
                 function renderTotals() {
