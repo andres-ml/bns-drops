@@ -168,7 +168,7 @@ textarea {
     color: white;
 }
 
-textarea, input, .log {
+textarea, .log {
     padding: 5px;
 }
 
@@ -197,6 +197,16 @@ textarea, input, .log {
 .buttons input {
     padding: 7px;
     border-radius: 2px 0px 0px 2px;
+}
+
+.total:not(:last-child) {
+    border-bottom: 1px solid #c5c5c5;
+    padding-bottom: 8px;
+    margin-bottom: 8px;
+}
+
+.party h4 {
+    height: 20px;
 }
 
 .total .surplus {

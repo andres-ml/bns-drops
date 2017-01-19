@@ -321,19 +321,17 @@ Laravel @ Sanguine Guard, Angler's Watch
                 
                 function renderTotals() {
                     $('.totals div').each(function() {
-                        var size    = $(this).data('size');
+                        var size        = $(this).data('size');
+                        var $container  = $(this).find('.text');
                         
-                        var items   = [];
+                        $container.empty();
+                        
                         for (var key in state.totals) {
-                            var total       = state.totals[key];
-                            if (total === 0) {
-                                continue;
+                            var total = state.totals[key];
+                            if (total !== 0) {
+                                $container.append( renderTotal(key, total, size) );
                             }
-                            
-                            items.push( renderTotal(key, total, size) );
                         }
-                        
-                        $(this).find('.text').html( items.join('<hr>') );
                     });
                 }
                 
@@ -350,7 +348,7 @@ Laravel @ Sanguine Guard, Angler's Watch
                         $total.find('.surplus').text(total % size);
                     }
                     
-                    return $total.outerHtml();
+                    return $total;
                 }
                 
                 $('.drops').on('click', '.btn-drop-add', function() {
@@ -365,7 +363,7 @@ Laravel @ Sanguine Guard, Angler's Watch
                 });
                 
                 $('.btn-log').on('click', function() {
-                    $('#log').toggleEased(500);
+                    $('#log').slideToggle(500);
                 });
                 
                 $('.comments').on('input', function() {
